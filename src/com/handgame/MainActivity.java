@@ -1,63 +1,99 @@
 package com.handgame;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
+import org.opencv.android.JavaCameraView;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Mat;
+
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
+import android.view.SurfaceView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements CvCameraViewListener2
+{
 
+	private JavaCameraView mCameraView = null;
+	
+	//anonimna callback klasa koristimo kad se konektujemo na opencv
+	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this)
+	{
+		@Override
+		public void onManagerConnected(int status)
+		{
+			switch(status)
+			{
+				case LoaderCallbackInterface.SUCCESS:
+				{
+					mCameraView.enableView(); //ako se konektovao za cv enablujemo kameru
+					break;
+				}
+				default:
+				{
+					super.onManagerConnected(status);
+				}
+			}
+		}
+	};
+	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) 
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
+		//nalazimo nas camera widget i ukljucimo da je vidljiv
+		mCameraView = (JavaCameraView)findViewById(R.id.handgame_surface_view);
+		mCameraView.setVisibility(SurfaceView.VISIBLE);
+		
+		//postavimo da je listener za cameru ova klasa jer i mi u ovoj klasi imeplemtiramo camera listener
+		mCameraView.setCvCameraViewListener(this);
+		
 	}
+
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		
+		//just as our app is loaded we call a helper class to bind activity to opencv service
+		OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
+	}
+
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+	public void onCameraViewStarted(int width, int height) {
+		// TODO Auto-generated method stub
+		
 	}
+
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+	public void onCameraViewStopped() {
+		// TODO Auto-generated method stub
+		
 	}
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
 
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container,
-					false);
-			return rootView;
+	@Override
+	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
+		
+		//u sustini ovde dobijamo ulazni frame i mogli bi raditi neke manipulacije
+		
+		return inputFrame.gray();
+	}
+	
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		
+		if(mCameraView != null)
+		{
+			mCameraView.disableView();
 		}
 	}
 
