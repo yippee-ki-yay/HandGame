@@ -4,5 +4,11 @@
     <string name="app_name">HandGame</string>
     <string name="hello_world">Hello beso!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_menu">MenuActivity</string>
+    <string name="GameButton">Start game</string>
+    <string name="CalibrationButton">Start calibration</string>
+    <string name="SettingsButton">Settings</string>
+    <string name="ExitButton">Exit</string>
+    <string name="title_activity_camera">CameraActivity</string>
 
 </resources>
