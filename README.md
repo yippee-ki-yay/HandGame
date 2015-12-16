@@ -29,3 +29,21 @@ Danilo Sekulić Ra140/2011
 6. Ciljevi
 	a) Pomoću OpenCV biblioteke razviti prepoznavanje različitih položaja šake na android platformi.
         b) Razvitak igrice koja koristi implementiranu funkcionalnost (uz mogućnost kasnijeg objavljivanja na google play-u)
+
+
+Korišćeno okruženje:
+	
+	-ADT bundle for windows v22.6.2
+    	-Android API nivo 19
+    	-OpenCV 3.0.0 za android
+    
+Podešavanje okruženja:
+
+    	1) Pokrenuti ADT
+    	2) Importovati projekat HandGame
+    	3) Importovati OpenCV3.0.0 kao projekat
+    	4) Povezati OpenCV sa projektom HandGame tako što se u Properties delu HandGame projekta pod tabom Android čekira openCV 	biblioteka
+    	5) Isključiti opciju isLibrary ako je uključena
+    	6) Ukoliko se testira na mobilnom uređaju, u Run configurations -> Target odabrati Always prompt to pick device
+    	7) Ukoliko eclipse ne detektuje mobilni uređaj potrebno je instalirati driver-e za dati model uređaja
+    	8) Na mobilnom uređaju instalirati aplikaciju openCV Manager
