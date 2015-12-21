@@ -1,5 +1,7 @@
 package com.handgame;
 
+import hand_recognition.HandDetection;
+
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
@@ -18,8 +20,9 @@ import android.view.WindowManager;
 public class CameraActivity extends Activity implements CvCameraViewListener2
 {
 
-private JavaCameraView mCameraView = null;
-private Mat result = null;
+	private JavaCameraView mCameraView = null;
+	private Mat result = null;
+	private HandDetection handDetector = null;
 	
 	//anonimna callback klasa koristimo kad se konektujemo na opencv
 	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this)
@@ -78,6 +81,7 @@ private Mat result = null;
 	public void onCameraViewStarted(int width, int height) {
 		// TODO Auto-generated method stub
 		result = new Mat();
+		handDetector = new HandDetection();
 		
 	}
 
@@ -86,6 +90,7 @@ private Mat result = null;
 	public void onCameraViewStopped() {
 		// TODO Auto-generated method stub
 		result.release();
+		handDetector.dispose();
 		
 	}
 
@@ -95,8 +100,8 @@ private Mat result = null;
 		
 		//u sustini ovde dobijamo ulazni frame i mogli bi raditi neke manipulacije
 		
-		//treshold odradjen kao primer ali i odmah se vidi da ce nam trebati ovo za izvalcenje sake
-		Imgproc.adaptiveThreshold(inputFrame.gray(), result, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 15, 4);
+		//handDetector.adaptiveThreshold(inputFrame.gray(), result);
+		handDetector.colorBasedThreshold(inputFrame.rgba(), result);
 		
 		return result;
 	}
