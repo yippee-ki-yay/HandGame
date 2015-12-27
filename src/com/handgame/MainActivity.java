@@ -32,6 +32,7 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(View v) {
 				Intent i =  new Intent(MainActivity.this, CameraActivity.class);
+				i.putExtra("training", false);
 				startActivity(i);
 				
 			}

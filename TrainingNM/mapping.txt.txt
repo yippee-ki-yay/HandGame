@@ -1,0 +1,11 @@
+hand1.png : ruka
+hand2.png : ruka
+hand3.png : ruka
+hand4.png : ruka
+hand5.png : ruka
+hand6.png : ruka
+hand7.png : ruka
+hand8.png : ruka
+nohand1.png : none
+nohand2.png : none
+nohand3.png : none

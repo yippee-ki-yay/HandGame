@@ -37,12 +37,24 @@ public class HandDetection
 	{
 		Imgproc.adaptiveThreshold(inputMat, result, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 15, 4);
 		
-		Imgproc.findContours(result, contours, mHierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+		//Imgproc.findContours(result, contours, mHierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 		
-		Log.d("broj", " " + contours.size());
+		//Log.d("broj", " " + contours.size());
 	}
 	
-	public void colorBasedThreshold(Mat inputMat, Mat result)
+	public void colorBasedThreshold(Mat inputMat, Mat result, Scalar avgColor)
+	{
+		Imgproc.cvtColor(inputMat, inputMat, Imgproc.COLOR_RGB2HSV);
+		Core.inRange(inputMat, offsetScalar(avgColor, -20), new Scalar(60, 215, 225), result);
+		
+	}
+	
+	/**
+	 * Gets the avg color of the points we got out of the center of the screen
+	 * @param inputMat
+	 * @return
+	 */
+	public Scalar getHandColor(Mat inputMat)
 	{
 		Imgproc.cvtColor(inputMat, inputMat, Imgproc.COLOR_RGB2HSV);
 		
@@ -50,9 +62,7 @@ public class HandDetection
 		
 		Scalar avgColor = getAverageColor(colorPoints);
 		
-		Core.inRange(inputMat, offsetScalar(avgColor, -20), offsetScalar(avgColor, 40), result);
-		
-		
+		return avgColor;
 	}
 	
 	/**
