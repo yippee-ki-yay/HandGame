@@ -1,9 +1,22 @@
 package com.handgame;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.util.HashMap;
+
+import org.neuroph.core.NeuralNetwork;
+import org.neuroph.imgrec.ImageRecognitionPlugin;
+import org.neuroph.nnet.MultiLayerPerceptron;
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Process;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -26,7 +39,6 @@ public class MainActivity extends Activity
 		Button calibrationButton = (Button)findViewById(R.id.CalibrationButton);
 		Button exitButton = (Button)findViewById(R.id.ExitButton);
 		
-		
 		calibrationButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -38,7 +50,6 @@ public class MainActivity extends Activity
 			}
 		});
 		
-		
 		exitButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -47,11 +58,7 @@ public class MainActivity extends Activity
 				System.exit(0);
 				
 			}
-		});
-		
+		});	
 	}
-
-	
-
 
 }

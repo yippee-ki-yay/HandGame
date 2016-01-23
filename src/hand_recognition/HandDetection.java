@@ -36,10 +36,10 @@ public class HandDetection
 	public void adaptiveThreshold(Mat inputMat, Mat result)
 	{
 		Imgproc.adaptiveThreshold(inputMat, result, 255, Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY, 15, 4);
+		contours = new ArrayList<MatOfPoint>();
+		Imgproc.findContours(result, contours, mHierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 		
-		//Imgproc.findContours(result, contours, mHierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
-		
-		//Log.d("broj", " " + contours.size());
+		Log.d("broj", " " + contours.size());
 	}
 	
 	public void colorBasedThreshold(Mat inputMat, Mat result, Scalar avgColor)

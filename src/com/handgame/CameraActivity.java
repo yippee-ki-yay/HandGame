@@ -3,9 +3,13 @@ package com.handgame;
 import hand_recognition.HandDetection;
 
 import java.io.File;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.neuroph.nnet.MultiLayerPerceptron;
+import org.neuroph.core.NeuralNetwork;
+import org.neuroph.imgrec.ImageRecognitionPlugin;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
@@ -20,6 +24,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -38,6 +43,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2
 	private HandDetection handDetector = null;
 	private boolean screenTouched = false;
 	private Scalar avgColor = null;
+	private NeuralNetwork nnet = null;
+	private Thread threadNN;
 	
 	//anonimna callback klasa koristimo kad se konektujemo na opencv
 	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this)
@@ -60,8 +67,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2
 		}
 	};
 	
-	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,7 +85,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2
 				
 		//postavimo da je listener za cameru ova klasa jer i mi u ovoj klasi imeplemtiramo camera listener
 		mCameraView.setCvCameraViewListener(this);
-
 	}
 
 	@Override
@@ -112,28 +116,70 @@ public class CameraActivity extends Activity implements CvCameraViewListener2
 		
 	}
 
-
 	@Override
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) 
 	{
 		//starts the adaptive threshold and saves picture when taped screen
-		
 		handDetector.adaptiveThreshold(inputFrame.gray(), result);
 		
 		Imgproc.resize(result, handImg, new Size(32, 32));
 
 		if(screenTouched == true)
 		{
+			colorHandDetection(inputFrame);
+			
+			// pravljenje threada za pravljenje neuronske mreze i prosledjivanje slike na ulaz
+			threadNN = new Thread(null, loadNNet, "dataLoader", 32000);
+			threadNN.start();
+			
 			saveImg(handImg);
 			screenTouched = false;
 		}
-		
-		
 		
 		//return inputFrame.rgba();
 		return result;
 	}
 	
+	/**
+	 *  Thread which loads Neural network if it's not loaded already and sends as input image taken from camera.
+	 */
+	private Runnable loadNNet = new Runnable() {
+	  
+	  public void run() {
+		
+		if(nnet == null) {
+			//File dir = Environment.getExternalStorageDirectory();
+			//File nnetFile = new File(dir, "Download/mlpTest.nnet");
+			//nnet = NeuralNetwork.createFromFile(nnetFile);
+			InputStream is = getResources().openRawResource(R.raw.mlp_test);
+			nnet = NeuralNetwork.load(is);
+		}
+		
+		//ImageRecognitionPlugin imageRecognition = (ImageRecognitionPlugin) nnet.getPlugin(ImageRecognitionPlugin.class);
+		
+        double[] imgArr = new double[handImg.rows()*handImg.cols()];
+		
+		if(handImg.isContinuous())
+		{	
+			for(int i = 0; i < handImg.rows(); ++i)
+			{
+				for(int j = 0; j < handImg.cols(); ++j)
+				{
+					imgArr[(i * handImg.rows()) + j] = handImg.get(i, j)[0];
+				}
+				
+			}
+		}
+		
+		double[] input = imgArr;
+    	nnet.setInput(input);
+    	nnet.calculate();
+    	double[] result = nnet.getOutput();
+    	
+    	Log.d("test", "rezultat0" + result[0]);
+    	Log.d("test", "rezultat1" + result[1]);
+    	}
+	};
 	
 	//TODO: get 5 or so threshold image and merge them for better results
 	/**
@@ -146,7 +192,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2
 	 */
 	private Mat colorHandDetection(CvCameraViewFrame inputFrame)
 	{
-		
+		avgColor = handDetector.getHandColor(inputFrame.rgba());
 		if(screenTouched == false)
 		{
 			avgColor = handDetector.getHandColor(inputFrame.rgba());
@@ -154,12 +200,10 @@ public class CameraActivity extends Activity implements CvCameraViewListener2
 		}
 		else
 		{
-			
 			Log.d("avg", avgColor.toString());
 			handDetector.colorBasedThreshold(inputFrame.rgba(), result, avgColor);
 			
 			return result;
-
 		}
 		
 		Imgproc.cvtColor(result, result, Imgproc.COLOR_GRAY2RGBA);
@@ -185,6 +229,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2
 		
 		File file = new File(path + "/handgame", "image" + timeStamp +  ".png");
 		Imgcodecs.imwrite(file.toString(), handImg);
+		
 	}
 	
 	@Override
@@ -204,7 +249,4 @@ public class CameraActivity extends Activity implements CvCameraViewListener2
 			mCameraView.disableView();
 		}
 	}
-
-
-
 }
