@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 
+import org.neuroph.core.NeuralNetwork;
 import org.neuroph.core.data.DataSet;
 import org.neuroph.nnet.MultiLayerPerceptron;
 import org.neuroph.util.TransferFunctionType;
@@ -95,7 +96,7 @@ public class Training
 	public void train(String nmFile)
 	{
 		
-		loadMapping("mapping.txt.txt");
+		loadMapping("mappings.txt");
 		
 		DataSet data = new DataSet(32*32, 2);
 		

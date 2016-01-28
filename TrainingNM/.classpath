@@ -2,11 +2,15 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/opencv3.0"/>
-	<classpathentry kind="lib" path="C:/Users/korisnik/Desktop/neuroph-2.92/neuroph-adapters-2.92.jar"/>
-	<classpathentry kind="lib" path="C:/Users/korisnik/Desktop/neuroph-2.92/neuroph-core-2.92.jar"/>
-	<classpathentry kind="lib" path="C:/Users/korisnik/Desktop/neuroph-2.92/neuroph-imgrec-2.92.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.8.0_66"/>
-	<classpathentry kind="lib" path="C:/Users/korisnik/Desktop/slf4j-1.7.13/slf4j-api-1.7.13.jar"/>
-	<classpathentry kind="lib" path="C:/Users/korisnik/Desktop/slf4j-1.7.13/slf4j-1.7.13/slf4j-nop-1.7.13.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="E:/workspace an/OpenCV-3.0.0-android-sdk-1/OpenCV-android-sdk/sdk/java/bin/opencv library - 3.0.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/opencv 3.0.0"/>
+	<classpathentry kind="lib" path="lib/neuroph-adapters-2.9.jar"/>
+	<classpathentry kind="lib" path="lib/neuroph-contrib-2.9.jar"/>
+	<classpathentry kind="lib" path="lib/neuroph-core-2.9.jar"/>
+	<classpathentry kind="lib" path="lib/neuroph-imgrec-2.9.jar"/>
+	<classpathentry kind="lib" path="lib/neuroph-ocr-2.9.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.5.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-nop-1.7.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
